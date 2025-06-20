@@ -125,3 +125,10 @@ You will be able to:
 - View all live disasters and reports
 - Filter reports
 - See map markers for disasters
+
+## 🔗 Demo & Submission
+
+- **Live App:** [Click here](https://disaster-response-g3dvcjeye-subhojit-pauls-projects-0529b500.vercel.app)
+- **Backend:** [Click here](https://disaster-backend-mtev.onrender.com/)
+- **GitHub Repo:** [Click here](https://github.com/subhpaul123/disaster-response.git)
+- **Submission Zip:** `attached in email`
