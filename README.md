@@ -1,4 +1,4 @@
-![Dashboard Screenshot](assets/screenshot.png)
+![Screenshot](assets/screenshot.png)
 
 
 🌍 Disaster Response Coordination Platform
