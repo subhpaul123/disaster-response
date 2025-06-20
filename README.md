@@ -1,40 +1,61 @@
-# Disaster Response Coordination Platform
+![Dashboard Screenshot](assets/screenshot.png)
+
+
+🌍 Disaster Response Coordination Platform
+==========================================
 
 A full-stack disaster coordination platform that enables users to report disasters, view real-time updates, verify images using AI, and access geospatial insights through interactive maps.
 
----
 
-## TECH STACK
+🛠 TECH STACK
+-------------
 
-- **Frontend:** HTML, JavaScript, CSS, Mapbox GL JS  
-- **Backend:** Node.js, Express.js  
-- **Database:** Supabase (PostgreSQL with geospatial support)  
-- **AI Integration:** Google Gemini API (location extraction, image verification)  
-- **Real-Time:** Socket.IO  
-- **Caching:** Supabase cache table  
+-   **Frontend:** HTML, JavaScript, CSS, Mapbox GL JS
 
----
+-   **Backend:** Node.js, Express.js
 
-## FEATURES IMPLEMENTED
+-   **Database:** Supabase (PostgreSQL + PostGIS)
+
+-   **AI Integration:** Google Gemini API (text location extraction, image verification)
+
+-   **Real-Time:** Socket.IO
+
+-   **Caching:** Supabase cache table
+
+* * * * *
+
+✅ FEATURES IMPLEMENTED
+----------------------
 
 ### Core Features:
-- Create, view, update, and delete disaster records with geolocation.
-- Submit user reports including text and image URLs.
-- Real-time updates using WebSocket (Socket.IO).
-- Extract locations from descriptions using Google Gemini API.
-- Geocode location names to coordinates using Mapbox.
-- Display disasters on an interactive Mapbox map.
+
+-   Create, view, and manage disaster records with coordinates.
+
+-   Submit user reports with text and image URLs.
+
+-   Extract locations from text using Gemini AI and geocode using Mapbox.
+
+-   Real-time updates using Socket.IO.
+
+-   Interactive Mapbox-based disaster visualization.
 
 ### Optional Features:
-- Detect urgent reports with keywords like “urgent”, “SOS”.
-- Classify reports as "need", "offer", "alert", or "general".
-- Filter reports by category and priority using UI buttons.
-- Mapbox token is securely fetched via backend (not exposed).
-- Verify image authenticity using Gemini Vision API.
 
----
+-   Detect urgent reports with keywords (e.g. "urgent", "SOS").
 
-## PROJECT STRUCTURE
+-   Classify reports into "need", "offer", "alert", or "general".
+
+-   Filter reports using UI buttons by type or priority.
+
+-   Secure Mapbox token fetch via backend (not exposed in frontend).
+
+-   Verify images with Gemini Vision API.
+
+
+
+📦 PROJECT STRUCTURE
+--------------------
+
 
 ```
 disaster-response/
@@ -49,86 +70,165 @@ disaster-response/
 └── .gitignore
 ```
 
----
 
-## SETUP INSTRUCTIONS
+🔧 BACKEND OVERVIEW
+-------------------
 
-### 1. Clone the Repository
-```bash
-git clone https://github.com/yourusername/disaster-response.git
-cd disaster-response
-```
+The backend is built with **Node.js (Express)** and connects to **Supabase PostgreSQL** with **PostGIS** for geolocation support. It integrates AI and real-time communication.
 
-### 2. Supabase Setup
-Create a new project at [supabase.com](https://supabase.com) and set up the following tables:
+### Key APIs:
 
-#### disasters
-- id (UUID)
-- title
-- location_name
-- location (GEOGRAPHY)
-- description
-- tags (array)
-- created_at
+-   `/disasters` -- Create disaster, geocode using Mapbox, extract location via Gemini.
 
-#### reports
-- id (UUID)
-- disaster_id (foreign key)
-- user_id
-- content
-- image_url
-- verification_status
-- priority (boolean)
-- category
-- created_at
+-   `/reports` -- Submit reports, auto-classify (need/offer/alert/general), detect priority.
 
-Also set up:
-- **resources** (optional disaster-related assets)
-- **cache** (used to store Mapbox/geocoding responses)
+-   `/geocode` -- Converts location text to coordinates using Mapbox.
 
-Enable **PostGIS** extension and optionally disable RLS for testing.
+-   `/mapbox-token` -- Secure token delivery for frontend without exposing secrets.
 
-### 3. Backend Setup
-```bash
-cd backend
-npm install
-```
+### Real-time:
 
-Create a `.env` file:
+-   Uses Socket.IO to emit `disaster_updated` and `social_media_updated` events.
+
+### AI Integration:
+
+-   **Gemini Text API**: Extracts real-world place names from disaster descriptions.
+
+-   **Gemini Vision API**: Optionally used to verify image authenticity (if configured).
+
+### Caching:
+
+-   Geocode results are cached in Supabase's `cache` table to reduce API calls.
+
+### Environment:
+
+`.env` contains:
+
+
 ```
 PORT=4001
-SUPABASE_URL=https://your-supabase-url.supabase.co
-SUPABASE_KEY=your-service-role-key
-GEMINI_API_KEY=your-google-gemini-key
-MAPBOX_TOKEN=your-mapbox-token
+SUPABASE_URL=...
+SUPABASE_KEY=...
+GEMINI_API_KEY=...
+MAPBOX_TOKEN=...
 ```
 
-Run backend:
-```bash
-node index.js
-```
+### Deployment:
 
----
+Deployed on **Render** with `npm install` and `node index.js`.
 
-## FRONTEND INSTRUCTIONS
 
-Open the `frontend/index.html` file in your browser directly  
-**or** use VS Code Live Server / Python HTTP server:
-```bash
-cd frontend
-python3 -m http.server
-```
+💻 FRONTEND OVERVIEW
+--------------------
 
-You will be able to:
-- Create disasters
-- Submit reports
-- View all live disasters and reports
-- Filter reports
-- See map markers for disasters
+The frontend is a lightweight HTML + JS app that connects to the backend and renders dynamic content with filters and maps.
 
-## 🔗 Demo & Submission
+### Features:
 
-- **Live App:** [Click here](https://disaster-response-g3dvcjeye-subhojit-pauls-projects-0529b500.vercel.app)
-- **Backend:** [Click here](https://disaster-backend-mtev.onrender.com/)
-- **GitHub Repo:** [Click here](https://github.com/subhpaul123/disaster-response.git)
-- **Submission Zip:** `attached in email`
+-   Create disasters via form (with tags, title, and description).
+
+-   Submit structured reports with user info, images, and content.
+
+-   Display interactive Mapbox map with real-time disaster markers.
+
+-   Show live disaster and report lists from the backend.
+
+-   Category and priority filter buttons for submitted reports.
+
+### Filtering:
+
+Users can filter by:
+
+-   All
+
+-   ⚠️ Urgent
+
+-   Needs
+
+-   Offers
+
+-   Alerts
+
+### Mapbox Security:
+
+-   Mapbox access token is **not hardcoded**.
+
+-   Token is fetched securely via `/mapbox-token` endpoint.
+
+### Deployment:
+
+Deployed on **Vercel**, configured as:
+
+-   Root: `frontend`
+
+-   Build Command: `none`
+
+-   Output Directory: `frontend`
+
+🧪 SUPABASE SETUP
+-----------------
+
+Create the following tables in Supabase:
+
+### `disasters`
+
+-   id (UUID)
+
+-   title
+
+-   location_name
+
+-   location (GEOGRAPHY)
+
+-   description
+
+-   tags (array)
+
+-   created_at
+
+### `reports`
+
+-   id (UUID)
+
+-   disaster_id
+
+-   user_id
+
+-   content
+
+-   image_url
+
+-   verification_status
+
+-   priority (boolean)
+
+-   category
+
+-   created_at
+
+### Other Tables:
+
+-   `resources` (optional)
+
+-   `cache` (for geocode caching)
+
+Enable the **PostGIS extension** and disable RLS for quick testing.
+
+
+🚀 DEPLOYMENT LINKS
+-------------------
+
+-   **Frontend (Vercel):** [Live App](https://disaster-response-g3dvcjeye-subhojit-pauls-projects-0529b500.vercel.app)
+
+-   **Backend (Render):** [API Server](https://disaster-backend-mtev.onrender.com/)
+
+-   **GitHub Repo:** [GitHub Codebase](https://github.com/subhpaul123/disaster-response.git)
+
+💡 Cursor/Windsurf Usage Note
+-----------------------------
+
+-   **Cursor AI** was used to generate the initial scaffolding for the backend, including route handlers and service structure.
+
+-   **Windsurf AI** logic was applied to generate mock social media logic and content classifiers used in the `/reports` module.
+
+-   Final classification rules were tuned manually based on Windsurf-generated keyword analysis.
